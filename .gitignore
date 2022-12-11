@@ -1,4 +1,4 @@
 # 忽略缓存文件夹
-.DerivedDataCache
-.Intermediate
-.Saved
+.project/DerivedDataCache
+.project/Intermediate
+.project/Saved
