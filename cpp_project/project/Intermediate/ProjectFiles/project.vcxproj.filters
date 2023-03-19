@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\project.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\project.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\projectEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\project">
+      <UniqueIdentifier>{A44C1722-EDD7-36C7-8BCC-B2872EC63F24}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\project\project.Build.cs">
+      <Filter>Source\project</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\project\project.cpp">
+      <Filter>Source\project</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\project\project.h">
+      <Filter>Source\project</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\project\projectGameModeBase.cpp">
+      <Filter>Source\project</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\project\projectGameModeBase.h">
+      <Filter>Source\project</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\project\TFGameModeBase.cpp">
+      <Filter>Source\project</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\project\TFGameModeBase.h">
+      <Filter>Source\project</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\project\TFPlayerController.cpp">
+      <Filter>Source\project</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\project\TFPlayerController.h">
+      <Filter>Source\project</Filter>
+    </ClInclude>
+    <Filter Include="Source\project\Private">
+      <UniqueIdentifier>{BA99A34C-2FCD-3C7A-906A-D9FBD1EC1C2A}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\project\Private\GridBaseActor.cpp">
+      <Filter>Source\project\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\project\Private\GridManagerActor.cpp">
+      <Filter>Source\project\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\project\Private\LevelDesignAsset.cpp">
+      <Filter>Source\project\Private</Filter>
+    </ClCompile>
+    <Filter Include="Source\project\Public">
+      <UniqueIdentifier>{910CF130-57CB-3207-84CA-6522CBD9FA8E}</UniqueIdentifier>
+    </Filter>
+    <ClInclude Include="..\..\Source\project\Public\GridBaseActor.h">
+      <Filter>Source\project\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\project\Public\GridManagerActor.h">
+      <Filter>Source\project\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\project\Public\LevelDesignAsset.h">
+      <Filter>Source\project\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
