@@ -6,6 +6,19 @@
 #include "GameFramework/Actor.h"
 #include "GridBaseActor.generated.h"
 
+USTRUCT(BlueprintType, Category = "TF|Grid|Tower", DisplayName = "Grid Interaction Info")
+struct FGridInteractionInfo
+{
+public:
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+	bool isEnable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+	float Size;
+};
+
 UCLASS()
 class PROJECT_API AGridBaseActor : public AActor
 {
@@ -24,7 +37,14 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	//	迷雾的getter/setter
 	void SetFogStatus(bool flag);
+	bool GetFogStatus()const { return isFogEnable; }
+
+	//	高度的getter/setter
+	void SetHeight(const float& val) { HeightInfo = val; }
+	float GetHeight() const { return HeightInfo; }
+
 
 public:
 	//	迷雾的mesh
@@ -35,8 +55,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		TObjectPtr<UStaticMeshComponent> GridMesh;
 
+	//	网格的编号
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+		int32 GridNum;
+
+	//	grid的交互信息
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+		FGridInteractionInfo GridInteractionInfo;
+
 private:
 	bool isFogEnable{ true };
 
 	bool isDeform{ false };
+
+	float HeightInfo{ 1.f };
 };

@@ -5,12 +5,28 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "LevelDesignAsset.h"
+#include "GridBaseActor.h"
 
 #include "GridManagerActor.generated.h"
 
 
+/*
+	每个grid的信息
+*/
+USTRUCT()
+struct FGridAdjacentInfo
+{
+public:
+	GENERATED_USTRUCT_BODY()
 
+public:
+	AGridBaseActor* Up = nullptr;
+	AGridBaseActor* Up_Right = nullptr;
+	AGridBaseActor* Down_Right = nullptr;
+	AGridBaseActor* Down = nullptr;
+	AGridBaseActor* Down_Left = nullptr;
+	AGridBaseActor* Up_Left = nullptr;
+};
 
 UCLASS()
 class PROJECT_API AGridManagerActor : public AActor
@@ -19,7 +35,7 @@ class PROJECT_API AGridManagerActor : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	AGridManagerActor();
+	AGridManagerActor(const FObjectInitializer& ObjectInitializer);
 
 	static AGridManagerActor* GetInstance()
 	{
@@ -30,6 +46,8 @@ public:
 		return GridManagerActor;
 	}
 
+private:
+	static AGridManagerActor* GridManagerActor;
 
 protected:
 	// Called when the game starts or when spawned
@@ -40,13 +58,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|GridManager")
-	TObjectPtr<ULevelDesignAsset> LevelDesignAsset;
+	void BuildLevel();
 
-
+	AGridBaseActor* GetRelativeGrid(AGridBaseActor*, int32);
 
 public:
-	void BuildLevel();
-private:
-	static AGridManagerActor* GridManagerActor;
+	//	grid的映射map
+	TMap<AGridBaseActor*, FGridAdjacentInfo> GridMappingMap;
+
 };
