@@ -23,6 +23,15 @@
     <None Include="..\..\Config\DefaultGame.ini">
       <Filter>Config</Filter>
     </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Config\HoloLens">
+      <UniqueIdentifier>{4C8DD267-CDE7-336F-8602-F5F485D22BAB}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\HoloLens\HoloLensEngine.ini">
+      <Filter>Config\HoloLens</Filter>
+    </None>
     <Filter Include="Source\project">
       <UniqueIdentifier>{A44C1722-EDD7-36C7-8BCC-B2872EC63F24}</UniqueIdentifier>
     </Filter>
@@ -65,6 +74,12 @@
     <ClCompile Include="..\..\Source\project\Private\LevelDesignAsset.cpp">
       <Filter>Source\project\Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\project\Private\RoleBaseActor.cpp">
+      <Filter>Source\project\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\project\Private\TFGameInstance.cpp">
+      <Filter>Source\project\Private</Filter>
+    </ClCompile>
     <Filter Include="Source\project\Public">
       <UniqueIdentifier>{910CF130-57CB-3207-84CA-6522CBD9FA8E}</UniqueIdentifier>
     </Filter>
@@ -75,6 +90,12 @@
       <Filter>Source\project\Public</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\project\Public\LevelDesignAsset.h">
+      <Filter>Source\project\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\project\Public\RoleBaseActor.h">
+      <Filter>Source\project\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\project\Public\TFGameInstance.h">
       <Filter>Source\project\Public</Filter>
     </ClInclude>
   </ItemGroup>
