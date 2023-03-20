@@ -4,6 +4,7 @@
 #include "RoleBaseActor.h"
 
 #include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetMathLibrary.h>
 
 #include "GridManagerActor.h"
 
@@ -25,10 +26,10 @@ void ARoleBaseActor::BeginPlay()
 	{
 		EnableInput(PC);
 
-		InputComponent->BindAction("Up", EInputEvent::IE_Pressed, this, ARoleBaseActor::UpPress);
-		InputComponent->BindAction("Down", EInputEvent::IE_Pressed, this, ARoleBaseActor::DownPress);
-		InputComponent->BindAction("Right", EInputEvent::IE_Pressed, this, ARoleBaseActor::RightPress);
-		InputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, ARoleBaseActor::LeftPress);
+		InputComponent->BindAction("Up", EInputEvent::IE_Pressed, this, &ARoleBaseActor::UpPress);
+		InputComponent->BindAction("Down", EInputEvent::IE_Pressed, this, &ARoleBaseActor::DownPress);
+		InputComponent->BindAction("Right", EInputEvent::IE_Pressed, this, &ARoleBaseActor::RightPress);
+		InputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, &ARoleBaseActor::LeftPress);
 	}
 }
 
@@ -37,6 +38,19 @@ void ARoleBaseActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (isMoving)
+	{
+		auto Transform = this->GetTransform();
+		auto Location = Transform.GetLocation() + (Velocity * MoveDirection);
+		Transform.SetLocation(Location);
+		this->SetActorTransform(Transform);
+
+		//	≈–∂œ «∑ÒÕ£÷π
+		if (UKismetMathLibrary::Dot_VectorVector((TargetLocation - Location), MoveDirection) < 0.)
+		{
+			isMoving = false;
+		}
+	}
 }
 
 void ARoleBaseActor::UpPress()
@@ -95,30 +109,44 @@ void ARoleBaseActor::LeftPress()
 
 void ARoleBaseActor::Move()
 {
+	AGridBaseActor* TargetActor = nullptr;
 	switch (inputType)
 	{
 	case ARoleBaseActor::Up:
-		auto TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 1);
-
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 1);
 		break;
 	case ARoleBaseActor::Right_Up:
-		auto TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 2);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 2);
 		break;
 	case ARoleBaseActor::Right_Down:		
-		auto TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 3);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 3);
 		break;
 	case ARoleBaseActor::Down:
-		auto TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 4);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 4);
 		break;
 	case ARoleBaseActor::Left_Down:
-		auto TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 5);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 5);
 		break;
 	case ARoleBaseActor::Left_Up:
-		auto TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 6);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 6);
 		break;
+	case Right:
+	case Left:
+	case None:
 	default:
 		break;
 	}
+	if (TargetActor)
+	{
+		TargetLocation = TargetActor->GetTransform().GetLocation();
+		auto CurrentLocation = this->GetTransform().GetLocation();
+
+		MoveDirection = TargetLocation - CurrentLocation;
+		MoveDirection.Normalize(0.0001);
+
+		isMoving = true;
+	}
+	inputType = None;
 }
 
 AGridBaseActor* ARoleBaseActor::GetCurrentGrid()

@@ -51,8 +51,6 @@ public:
 
 	void Move();
 
-	void MoveToTarget(AGridBaseActor* Target);
-
 public:
 	AGridBaseActor* GetCurrentGrid();
 
@@ -61,7 +59,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
 		TObjectPtr<UStaticMeshComponent> Mesh;
 
-	//	
+	//	任务移动的速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
 		float Velocity;
 
@@ -71,5 +69,8 @@ private:
 
 	//	是否在移动
 	bool isMoving = false;
+
+	FVector TargetLocation;
+	FVector MoveDirection;
 
 };

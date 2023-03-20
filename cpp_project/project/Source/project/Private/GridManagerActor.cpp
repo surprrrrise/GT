@@ -243,8 +243,9 @@ AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 i
 	if (index == 5)
 		return AdjacentInfo.Down_Left;
 
-	if (index == 5)
+	if (index == 6)
 		return AdjacentInfo.Up_Left;
 
+	return nullptr;
 }
 
