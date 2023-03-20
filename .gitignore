@@ -1,8 +1,9 @@
 # 忽略缓存文件夹
-.project/DerivedDataCache
-.project/Intermediate
-.project/Saved
+project/DerivedDataCache
+project/Intermediate
+project/Saved
 
-.cpp_project/project/.vs
-.cpp_project/project/DerivedDataCacheDerivedDataCache
-.cpp_project/project/Saved
+cpp_project/project/.vs
+cpp_project/project/DerivedDataCacheDerivedDataCache
+cpp_project/project/Intermediate
+cpp_project/project/Saved
