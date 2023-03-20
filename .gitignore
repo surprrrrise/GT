@@ -2,3 +2,7 @@
 .project/DerivedDataCache
 .project/Intermediate
 .project/Saved
+
+.cpp_project/project/.vs
+.cpp_project/project/DerivedDataCacheDerivedDataCache
+.cpp_project/project/Saved
