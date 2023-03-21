@@ -7,7 +7,7 @@
 #include <Kismet/KismetMathLibrary.h>
 
 #include "GridManagerActor.h"
-#include "TFGameConfigObject.h"
+#include "TFGlobalConfigActor.h"
 
 // Sets default values
 ARoleBaseActor::ARoleBaseActor()
@@ -22,8 +22,8 @@ void ARoleBaseActor::BeginPlay()
 	Super::BeginPlay();
 	
 	//	获取全局设定
-	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), UTFGameConfigObject::StaticClass());
-	UTFGameConfigObject* GLobalSetting = Cast<UTFGameConfigObject>(Actor);
+	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATFGlobalConfigActor::StaticClass());
+	ATFGlobalConfigActor* GLobalSetting = Cast<ATFGlobalConfigActor>(Actor);
 	SanDeltaValue = GLobalSetting->RoleSanDeltaValue;
 	CrossGridMaxGeight = GLobalSetting->RoleCrossGridMaxGeight;
 

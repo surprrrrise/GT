@@ -5,7 +5,9 @@
 #include "GridBaseActor.h"
 
 #include <Kismet/GameplayStatics.h>
-#include "TFGameConfigObject.h"
+#include <Kismet/KismetMathLibrary.h>
+
+#include "TFGlobalConfigActor.h"
 
 // Sets default values
 AGridBaseActor::AGridBaseActor()
@@ -14,9 +16,14 @@ AGridBaseActor::AGridBaseActor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//	创建Mesh
-	FogMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fog_Mesh"));
 	GridMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Grid_Mesh"));
+	GridMesh->SetupAttachment(RootComponent);
+	FogMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fog_Mesh"));
+	FogMesh->SetupAttachment(RootComponent);
 
+	//auto ActorTrans = GetTransform();
+	//auto FogTrans = UKismetMathLibrary::ComposeTransforms(FogRelativeTransform, GetTransform());
+	//FogMesh->SetWorldTransform(FogTrans);
 }
 
 // Called when the game starts or when spawned
@@ -25,8 +32,8 @@ void AGridBaseActor::BeginPlay()
 	Super::BeginPlay();
 	
 	//	获取全局设定
-	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), UTFGameConfigObject::StaticClass());
-	UTFGameConfigObject* GLobalSetting = Cast<UTFGameConfigObject>(Actor);
+	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATFGlobalConfigActor::StaticClass());
+	ATFGlobalConfigActor* GLobalSetting = Cast<ATFGlobalConfigActor>(Actor);
 	FogDisableTime = GLobalSetting->FogDisableTime;
 }
 

@@ -63,13 +63,19 @@ public:
 
 
 public:
+	//	地面的mesh
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+		TObjectPtr<UStaticMeshComponent> GridMesh;
+
 	//	迷雾的mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		TObjectPtr<UStaticMeshComponent> FogMesh;
 
-	//	地面的mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
-		TObjectPtr<UStaticMeshComponent> GridMesh;
+	FTransform GridRelativeTransform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+	FTransform FogRelativeTransform;
 
 	//	网格的编号
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
