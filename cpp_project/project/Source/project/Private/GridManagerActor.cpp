@@ -160,6 +160,8 @@ void AGridManagerActor::BuildLevel()
 
 		//	添加序号
 		TempMappingMap.Add(TTuple<int32, AGridBaseActor*>(Grid->GridNum, Grid));
+
+		GridList.Add(Grid);
 	}
 
 	//	再遍历一遍

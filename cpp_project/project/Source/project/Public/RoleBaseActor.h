@@ -43,6 +43,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	void Dead();
+
+	void OpenFog();
+
+public:
 	//	输入处理
 	void UpPress();
 	void DownPress();
@@ -52,16 +57,21 @@ public:
 	void Move();
 
 public:
+	//	获取到人物当前所在的网格
 	AGridBaseActor* GetCurrentGrid();
 
 public:
 	//	人物的mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
-		TObjectPtr<UStaticMeshComponent> Mesh;
+	TObjectPtr<UStaticMeshComponent> Mesh;
 
-	//	任务移动的速度
+	//	人物移动的速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
-		float Velocity;
+	float Velocity;
+
+	//	人物的san值
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
+	float SanValue;
 
 private:
 	//	输入类型
@@ -70,7 +80,15 @@ private:
 	//	是否在移动
 	bool isMoving = false;
 
+	//	人物当前的San值
+	float CurrentSanValue;
+
 	FVector TargetLocation;
 	FVector MoveDirection;
 
+	AGridBaseActor* CurrentGrid;
+
+	float SanDeltaValue;
+
+	float CrossGridMaxGeight;
 };

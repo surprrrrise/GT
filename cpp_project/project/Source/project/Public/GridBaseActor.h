@@ -15,9 +15,25 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 	bool isEnable;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 	float Size;
 };
+
+USTRUCT(BlueprintType, Category = "TF|Grid|Tower", DisplayName = "Grid Attacking Info")
+struct FGridAttackingInfo
+{
+public:
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+	bool isEnable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+	float Value;
+};
+
 
 UCLASS()
 class PROJECT_API AGridBaseActor : public AActor
@@ -69,4 +85,8 @@ private:
 	bool isDeform{ false };
 
 	float HeightInfo{ 1.f };
+
+	float FogDisableTime;
+
+	float CurFogDisableTime;
 };

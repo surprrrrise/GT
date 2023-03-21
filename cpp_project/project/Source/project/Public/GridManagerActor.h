@@ -63,7 +63,13 @@ public:
 	AGridBaseActor* GetRelativeGrid(AGridBaseActor*, int32);
 
 public:
+	void SetCurrentGrid(AGridBaseActor* Value) { CurrentGrid = Value; }
+
+public:
+	//	grid的列表
+	TArray<AGridBaseActor*> GridList;
 	//	grid的映射map
 	TMap<AGridBaseActor*, FGridAdjacentInfo> GridMappingMap;
 
+	AGridBaseActor* CurrentGrid;
 };

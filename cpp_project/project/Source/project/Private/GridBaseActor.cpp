@@ -1,7 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+
 #include "GridBaseActor.h"
+
+#include <Kismet/GameplayStatics.h>
+#include "TFGameConfigObject.h"
 
 // Sets default values
 AGridBaseActor::AGridBaseActor()
@@ -20,6 +24,10 @@ void AGridBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//	获取全局设定
+	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), UTFGameConfigObject::StaticClass());
+	UTFGameConfigObject* GLobalSetting = Cast<UTFGameConfigObject>(Actor);
+	FogDisableTime = GLobalSetting->FogDisableTime;
 }
 
 // Called every frame
@@ -27,6 +35,17 @@ void AGridBaseActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!isFogEnable)
+	{
+		CurFogDisableTime -= 1.f;
+
+		if (CurFogDisableTime < 0.f)
+		{
+			SetFogStatus(true);
+			CurFogDisableTime = FogDisableTime;
+			isFogEnable = true;
+		}
+	}
 }
 
 void AGridBaseActor::SetFogStatus(bool flag)

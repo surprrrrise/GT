@@ -7,6 +7,7 @@
 #include <Kismet/KismetMathLibrary.h>
 
 #include "GridManagerActor.h"
+#include "TFGameConfigObject.h"
 
 // Sets default values
 ARoleBaseActor::ARoleBaseActor()
@@ -20,6 +21,12 @@ void ARoleBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//	获取全局设定
+	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), UTFGameConfigObject::StaticClass());
+	UTFGameConfigObject* GLobalSetting = Cast<UTFGameConfigObject>(Actor);
+	SanDeltaValue = GLobalSetting->RoleSanDeltaValue;
+	CrossGridMaxGeight = GLobalSetting->RoleCrossGridMaxGeight;
+
 	//	启用用户输入
 	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
 	if (PC)
@@ -30,7 +37,11 @@ void ARoleBaseActor::BeginPlay()
 		InputComponent->BindAction("Down", EInputEvent::IE_Pressed, this, &ARoleBaseActor::DownPress);
 		InputComponent->BindAction("Right", EInputEvent::IE_Pressed, this, &ARoleBaseActor::RightPress);
 		InputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, &ARoleBaseActor::LeftPress);
+
+		InputComponent->BindAction("OpenFog", EInputEvent::IE_Pressed, this, &ARoleBaseActor::OpenFog);
 	}
+
+	CurrentGrid = GetCurrentGrid();
 }
 
 // Called every frame
@@ -49,6 +60,39 @@ void ARoleBaseActor::Tick(float DeltaTime)
 		if (UKismetMathLibrary::Dot_VectorVector((TargetLocation - Location), MoveDirection) < 0.)
 		{
 			isMoving = false;
+			CurrentGrid = GetCurrentGrid();
+			AGridManagerActor::GetInstance()->SetCurrentGrid(CurrentGrid);
+		}
+	}
+
+	//	判断是否掉san值
+	if (CurrentGrid->GetFogStatus())
+	{
+		CurrentSanValue -= SanDeltaValue;
+	}
+
+	//	san值过低，死亡
+	if (CurrentSanValue < 0.)
+	{
+		Dead();
+	}
+}
+
+void ARoleBaseActor::Dead()
+{
+}
+
+void ARoleBaseActor::OpenFog()
+{
+	CurrentGrid->SetFogStatus(false);
+
+	AGridBaseActor* RelativeGrid = nullptr;
+	for (size_t i = 1; i <= 6; ++i)
+	{
+		RelativeGrid = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, i);
+		if (RelativeGrid != nullptr)
+		{
+			RelativeGrid->SetFogStatus(false);
 		}
 	}
 }
@@ -113,22 +157,22 @@ void ARoleBaseActor::Move()
 	switch (inputType)
 	{
 	case ARoleBaseActor::Up:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 1);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 1);
 		break;
 	case ARoleBaseActor::Right_Up:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 2);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 2);
 		break;
 	case ARoleBaseActor::Right_Down:		
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 3);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 3);
 		break;
 	case ARoleBaseActor::Down:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 4);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 4);
 		break;
 	case ARoleBaseActor::Left_Down:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 5);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 5);
 		break;
 	case ARoleBaseActor::Left_Up:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(GetCurrentGrid(), 6);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 6);
 		break;
 	case Right:
 	case Left:
@@ -151,6 +195,27 @@ void ARoleBaseActor::Move()
 
 AGridBaseActor* ARoleBaseActor::GetCurrentGrid()
 {
-	return nullptr;
+	auto& GridList = AGridManagerActor::GetInstance()->GridList;
+
+	auto CurrentLocation = this->GetTransform().GetLocation();
+
+	int32 index = -1;
+	float MinDistance = 9999;
+
+	for (size_t i = 0; i < GridList.Num(); ++i)
+	{
+		auto TempLocation = GridList[i]->GetTransform().GetLocation();
+		auto Distance = (TempLocation - CurrentLocation).Length();
+
+		if (MinDistance > Distance)
+		{
+			MinDistance = Distance;
+			index = i;
+		}
+	}
+
+	if(index == -1) return nullptr;
+
+	return GridList[index];
 }
 
