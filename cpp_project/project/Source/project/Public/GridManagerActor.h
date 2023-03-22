@@ -41,7 +41,7 @@ public:
 	{
 		if (GridManagerActor == nullptr)
 		{
-			GridManagerActor = NewObject<AGridManagerActor>();
+			GridManagerActor = NewObject<AGridManagerActor>(GWorld->GetWorld());
 		}
 		return GridManagerActor;
 	}
@@ -58,12 +58,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void BuildLevel();
+	void BuildLevel(TArray<AActor*>& GridActorArray);
+	void BuildLevel(TArray<AGridBaseActor*>& GridActorArray);
 
-	AGridBaseActor* GetRelativeGrid(AGridBaseActor*, int32);
+	AGridBaseActor* GetRelativeGrid(AGridBaseActor*, int32, TArray<AGridBaseActor*>&);
 
 public:
-	void SetCurrentGrid(AGridBaseActor* Value) { CurrentGrid = Value; }
+	void SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>&);
 
 public:
 	//	gridµÄÁÐ±í

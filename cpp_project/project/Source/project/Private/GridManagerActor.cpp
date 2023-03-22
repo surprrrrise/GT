@@ -5,6 +5,8 @@
 
 #include "Kismet/GameplayStatics.h"
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 const int32 GridAdjacentInfoList[100][6] =
 {
 	{0,  0,  11,  2,  0,  0},
@@ -126,6 +128,7 @@ AGridManagerActor::AGridManagerActor(const FObjectInitializer& ObjectInitializer
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -133,23 +136,22 @@ void AGridManagerActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//	先获取到场景中所有的grid base
+	TArray<AActor*> GridActorArray;
+	auto World = GetWorld();
+	UGameplayStatics::GetAllActorsWithTag(World, TEXT("Grid"), GridActorArray);
 	//	构建Grid
-	BuildLevel();
+	BuildLevel(GridActorArray);
 }
 
 // Called every frame
 void AGridManagerActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-void AGridManagerActor::BuildLevel()
+void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 {
-	//	先获取到场景中所有的grid base
-	TArray<AActor*> GridActorArray;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGridBaseActor::StaticClass(), GridActorArray);
-
 	TMap<int32, AGridBaseActor*> TempMappingMap;
 	//	遍历所有actor
 	//		这一遍主要是判断哪些grid存在
@@ -223,11 +225,103 @@ void AGridManagerActor::BuildLevel()
 				TempNode.Up_Left = TempMappingMap[AdjacentInfo[1]];
 			}
 		}
+
+		auto temp = TTuple< AGridBaseActor*, FGridAdjacentInfo>{ Grid, TempNode };
+		GridMappingMap.Add(MoveTemp(temp));
 	}
 }
 
-AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 index)
+void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 {
+	TMap<int32, AGridBaseActor*> TempMappingMap;
+	//	遍历所有actor
+	//		这一遍主要是判断哪些grid存在
+	for (AGridBaseActor* Grid : GridActorArray)
+	{
+		//	添加序号
+		TempMappingMap.Add(TTuple<int32, AGridBaseActor*>(Grid->GridNum, Grid));
+
+		GridList.Add(Grid);
+	}
+
+	//	再遍历一遍
+	for (AGridBaseActor* Grid : GridActorArray)
+	{
+		auto AdjacentInfo = GridAdjacentInfoList[Grid->GridNum - 1];
+
+		FGridAdjacentInfo TempNode{};
+
+		//	逐一判断
+		if (AdjacentInfo[0] != 0)
+		{
+			//	存在
+			if (TempMappingMap.Contains(AdjacentInfo[0]))
+			{
+				TempNode.Up = TempMappingMap[AdjacentInfo[0]];
+			}
+		}
+		if (AdjacentInfo[1] != 0)
+		{
+			//	存在
+			if (TempMappingMap.Contains(AdjacentInfo[1]))
+			{
+				TempNode.Up_Right = TempMappingMap[AdjacentInfo[1]];
+			}
+		}
+		if (AdjacentInfo[2] != 0)
+		{
+			//	存在
+			if (TempMappingMap.Contains(AdjacentInfo[2]))
+			{
+				TempNode.Down_Right = TempMappingMap[AdjacentInfo[2]];
+			}
+		}
+		if (AdjacentInfo[3] != 0)
+		{
+			//	存在
+			if (TempMappingMap.Contains(AdjacentInfo[3]))
+			{
+				TempNode.Down = TempMappingMap[AdjacentInfo[3]];
+			}
+		}
+		if (AdjacentInfo[4] != 0)
+		{
+			//	存在
+			if (TempMappingMap.Contains(AdjacentInfo[4]))
+			{
+				TempNode.Down_Left = TempMappingMap[AdjacentInfo[4]];
+			}
+		}
+		if (AdjacentInfo[5] != 0)
+		{
+			//	存在
+			if (TempMappingMap.Contains(AdjacentInfo[5]))
+			{
+				TempNode.Up_Left = TempMappingMap[AdjacentInfo[5]];
+			}
+		}
+
+		auto temp = TTuple< AGridBaseActor*, FGridAdjacentInfo>{ Grid, TempNode };
+		GridMappingMap.Add(MoveTemp(temp));
+	}
+}
+
+void AGridManagerActor::SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>& GridActorArray)
+{
+	CurrentGrid = Value;
+
+	if (GridList.IsEmpty() || GridMappingMap.IsEmpty())
+	{
+		BuildLevel(GridActorArray);
+	}
+}
+
+AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 index, TArray<AGridBaseActor*>& GridActorArray)
+{
+	if (GridList.IsEmpty() || GridMappingMap.IsEmpty())
+	{
+		BuildLevel(GridActorArray);
+	}
 	auto AdjacentInfo = GridMappingMap[grid];
 
 	if (index == 1)
@@ -251,3 +345,4 @@ AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 i
 	return nullptr;
 }
 
+PRAGMA_ENABLE_OPTIMIZATION

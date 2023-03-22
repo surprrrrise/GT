@@ -72,9 +72,6 @@ public:
 		TObjectPtr<UStaticMeshComponent> FogMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
-	FTransform GridRelativeTransform;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 	FTransform FogRelativeTransform;
 
 	//	Íø¸ñµÄ±àºÅ

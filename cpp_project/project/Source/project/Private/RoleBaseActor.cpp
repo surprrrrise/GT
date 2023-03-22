@@ -9,11 +9,17 @@
 #include "GridManagerActor.h"
 #include "TFGlobalConfigActor.h"
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 // Sets default values
 ARoleBaseActor::ARoleBaseActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true;	
+	
+	//	创建Mesh
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Role"));
+	Mesh->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -41,7 +47,14 @@ void ARoleBaseActor::BeginPlay()
 		InputComponent->BindAction("OpenFog", EInputEvent::IE_Pressed, this, &ARoleBaseActor::OpenFog);
 	}
 
-	CurrentGrid = GetCurrentGrid();
+	SceneGridList = GetGridList();
+	CurrentGrid = GetCurrentGrid(SceneGridList);
+
+	
+	auto SelfLocation = this->GetTransform().GetLocation();
+	auto GridLocation = CurrentGrid->GetActorLocation();
+
+	CurrentSanValue = SanValue;
 }
 
 // Called every frame
@@ -60,8 +73,8 @@ void ARoleBaseActor::Tick(float DeltaTime)
 		if (UKismetMathLibrary::Dot_VectorVector((TargetLocation - Location), MoveDirection) < 0.)
 		{
 			isMoving = false;
-			CurrentGrid = GetCurrentGrid();
-			AGridManagerActor::GetInstance()->SetCurrentGrid(CurrentGrid);
+			CurrentGrid = GetCurrentGrid(SceneGridList);
+			AGridManagerActor::GetInstance()->SetCurrentGrid(CurrentGrid, SceneGridList);
 		}
 	}
 
@@ -89,7 +102,7 @@ void ARoleBaseActor::OpenFog()
 	AGridBaseActor* RelativeGrid = nullptr;
 	for (size_t i = 1; i <= 6; ++i)
 	{
-		RelativeGrid = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, i);
+		RelativeGrid = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, i, SceneGridList);
 		if (RelativeGrid != nullptr)
 		{
 			RelativeGrid->SetFogStatus(false);
@@ -104,14 +117,15 @@ void ARoleBaseActor::UpPress()
 		if (inputType == Right)
 		{
 			inputType = Right_Up;
-			return;
 		}
 		if (inputType == Left)
 		{
 			inputType = Left_Up;
-			return;
 		}
-		inputType = Up;
+		if (inputType == None)
+		{
+			inputType = Up;
+		}
 		Move();
 	}
 }
@@ -123,14 +137,15 @@ void ARoleBaseActor::DownPress()
 		if (inputType == Right)
 		{
 			inputType = Right_Down;
-			return;
 		}
 		if (inputType == Left)
 		{
 			inputType = Left_Down;
-			return;
 		}
-		inputType = Down;
+		if (inputType == None)
+		{
+			inputType = Down;
+		}
 		Move();
 	}
 }
@@ -147,7 +162,7 @@ void ARoleBaseActor::LeftPress()
 {
 	if (!isMoving)
 	{
-		inputType = Right;
+		inputType = Left;
 	}
 }
 
@@ -157,22 +172,22 @@ void ARoleBaseActor::Move()
 	switch (inputType)
 	{
 	case ARoleBaseActor::Up:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 1);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 1, SceneGridList);
 		break;
 	case ARoleBaseActor::Right_Up:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 2);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 2, SceneGridList);
 		break;
 	case ARoleBaseActor::Right_Down:		
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 3);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 3, SceneGridList);
 		break;
 	case ARoleBaseActor::Down:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 4);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 4, SceneGridList);
 		break;
 	case ARoleBaseActor::Left_Down:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 5);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 5, SceneGridList);
 		break;
 	case ARoleBaseActor::Left_Up:
-		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 6);
+		TargetActor = AGridManagerActor::GetInstance()->GetRelativeGrid(CurrentGrid, 6, SceneGridList);
 		break;
 	case Right:
 	case Left:
@@ -193,9 +208,9 @@ void ARoleBaseActor::Move()
 	inputType = None;
 }
 
-AGridBaseActor* ARoleBaseActor::GetCurrentGrid()
+AGridBaseActor* ARoleBaseActor::GetCurrentGrid(TArray<AGridBaseActor*>& GridList)
 {
-	auto& GridList = AGridManagerActor::GetInstance()->GridList;
+	//auto& GridList = AGridManagerActor::GetInstance()->GridList;
 
 	auto CurrentLocation = this->GetTransform().GetLocation();
 
@@ -219,3 +234,26 @@ AGridBaseActor* ARoleBaseActor::GetCurrentGrid()
 	return GridList[index];
 }
 
+TArray<AGridBaseActor*> ARoleBaseActor::GetGridList()
+{
+	TArray<AGridBaseActor*> res;
+	//	先获取到场景中所有的grid base
+	TArray<AActor*> GridActorArray;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("Grid"), GridActorArray);
+
+	TMap<int32, AGridBaseActor*> TempMappingMap;
+	//	遍历所有actor
+	//		这一遍主要是判断哪些grid存在
+	for (AActor* Actor : GridActorArray)
+	{
+		//	先进行类型转换
+		AGridBaseActor* Grid = Cast<AGridBaseActor>(Actor);
+
+		
+		res.Add(Grid);
+	}
+
+	return res;
+}
+
+PRAGMA_ENABLE_OPTIMIZATION

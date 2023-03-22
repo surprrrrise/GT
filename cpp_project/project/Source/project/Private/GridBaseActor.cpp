@@ -9,6 +9,8 @@
 
 #include "TFGlobalConfigActor.h"
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 // Sets default values
 AGridBaseActor::AGridBaseActor()
 {
@@ -21,9 +23,6 @@ AGridBaseActor::AGridBaseActor()
 	FogMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fog_Mesh"));
 	FogMesh->SetupAttachment(RootComponent);
 
-	//auto ActorTrans = GetTransform();
-	//auto FogTrans = UKismetMathLibrary::ComposeTransforms(FogRelativeTransform, GetTransform());
-	//FogMesh->SetWorldTransform(FogTrans);
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +34,8 @@ void AGridBaseActor::BeginPlay()
 	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATFGlobalConfigActor::StaticClass());
 	ATFGlobalConfigActor* GLobalSetting = Cast<ATFGlobalConfigActor>(Actor);
 	FogDisableTime = GLobalSetting->FogDisableTime;
+
+	CurFogDisableTime = FogDisableTime;
 }
 
 // Called every frame
@@ -61,12 +62,13 @@ void AGridBaseActor::SetFogStatus(bool flag)
 
 	if (flag)
 	{
-		FogMesh->SetVisibility(true);
+		FogMesh->SetVisibility(true, true);
 	}
 	else
 	{
-		FogMesh->SetVisibility(false);
+		FogMesh->SetVisibility(false, true);
 	}
 	isFogEnable = flag;
 }
 
+PRAGMA_ENABLE_OPTIMIZATION

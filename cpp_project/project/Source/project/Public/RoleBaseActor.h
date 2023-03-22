@@ -58,7 +58,10 @@ public:
 
 public:
 	//	获取到人物当前所在的网格
-	AGridBaseActor* GetCurrentGrid();
+	AGridBaseActor* GetCurrentGrid(TArray<AGridBaseActor*>& GridList);
+
+	//	获取到场景中的Grid
+	TArray<AGridBaseActor*> GetGridList();
 
 public:
 	//	人物的mesh
@@ -91,4 +94,6 @@ private:
 	float SanDeltaValue;
 
 	float CrossGridMaxGeight;
+
+	TArray<AGridBaseActor*> SceneGridList;
 };
