@@ -198,6 +198,16 @@ void ARoleBaseActor::Move()
 	if (TargetActor)
 	{
 		TargetLocation = TargetActor->GetTransform().GetLocation();
+
+		auto NewPos = FVector{ TargetLocation.X, TargetLocation.Y, TargetLocation.Z + 9999. };
+		FHitResult HitRes{};
+		
+		auto isHit = GetWorld()->LineTraceSingleByChannel(HitRes, NewPos, TargetLocation, ECC_GameTraceChannel1);
+		if (isHit)
+		{
+			HitRes.Location;
+		}
+		//ECC_WorldStatic
 		auto CurrentLocation = this->GetTransform().GetLocation();
 
 		MoveDirection = TargetLocation - CurrentLocation;

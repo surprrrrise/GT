@@ -63,6 +63,8 @@ public:
 
 	AGridBaseActor* GetRelativeGrid(AGridBaseActor*, int32, TArray<AGridBaseActor*>&);
 
+	void GridInteractionFunc();
+
 public:
 	void SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>&);
 

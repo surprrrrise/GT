@@ -71,4 +71,17 @@ void AGridBaseActor::SetFogStatus(bool flag)
 	isFogEnable = flag;
 }
 
+void AGridBaseActor::Deform()
+{
+	auto transform = GridMesh->GetRelativeTransform();
+	auto Scale = transform.GetScale3D();
+
+	Scale.Y *= GridInteractionInfo.Size;
+	transform.SetScale3D(Scale);
+	GridMesh->SetRelativeTransform(transform);
+
+	isDeform = true;
+	HeightInfo = GridInteractionInfo.Size;
+}
+
 PRAGMA_ENABLE_OPTIMIZATION

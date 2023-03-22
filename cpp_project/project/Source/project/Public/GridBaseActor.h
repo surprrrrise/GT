@@ -61,6 +61,10 @@ public:
 	void SetHeight(const float& val) { HeightInfo = val; }
 	float GetHeight() const { return HeightInfo; }
 
+	bool isInteractionEffect() { return isDeform; }
+
+public:
+	void Deform();
 
 public:
 	//	地面的mesh
@@ -81,6 +85,9 @@ public:
 	//	grid的交互信息
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		FGridInteractionInfo GridInteractionInfo;
+	//	grid的攻击信息
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+		FGridAttackingInfo GridAttackingInfo;
 
 private:
 	bool isFogEnable{ true };

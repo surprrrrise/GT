@@ -314,6 +314,8 @@ void AGridManagerActor::SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseAc
 	{
 		BuildLevel(GridActorArray);
 	}
+
+	GridInteractionFunc();
 }
 
 AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 index, TArray<AGridBaseActor*>& GridActorArray)
@@ -343,6 +345,14 @@ AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 i
 		return AdjacentInfo.Up_Left;
 
 	return nullptr;
+}
+
+void AGridManagerActor::GridInteractionFunc()
+{
+	if (CurrentGrid->GridInteractionInfo.isEnable && !CurrentGrid->isInteractionEffect())
+	{
+		CurrentGrid->Deform();
+	}
 }
 
 PRAGMA_ENABLE_OPTIMIZATION
