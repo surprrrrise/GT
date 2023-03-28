@@ -53,6 +53,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -70,9 +72,12 @@ public:
 
 public:
 	//	grid的列表
+	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	TArray<AGridBaseActor*> GridList;
 	//	grid的映射map
+	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	TMap<AGridBaseActor*, FGridAdjacentInfo> GridMappingMap;
 
+	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	AGridBaseActor* CurrentGrid;
 };

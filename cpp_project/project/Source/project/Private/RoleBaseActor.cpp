@@ -75,6 +75,23 @@ void ARoleBaseActor::Tick(float DeltaTime)
 			isMoving = false;
 			CurrentGrid = GetCurrentGrid(SceneGridList);
 			AGridManagerActor::GetInstance()->SetCurrentGrid(CurrentGrid, SceneGridList);
+
+			//	设置位置
+			TargetLocation = CurrentGrid->GetTransform().GetLocation();
+
+			auto NewPos = FVector{ TargetLocation.X, TargetLocation.Y, TargetLocation.Z + 9999. };
+			FHitResult HitRes{};
+
+			//	移动到当前的grid后grid有可能会变形，这时我们需要判断一下并将角色进行移动
+			if (GetWorld()->LineTraceSingleByChannel(HitRes, NewPos, TargetLocation, ECC_GameTraceChannel1))
+			{
+				TargetLocation = HitRes.Location;
+			}
+			//auto CurrentLocation = this->GetTransform().GetLocation();
+
+			SetActorLocation(TargetLocation);
+
+			MoveDirection = FVector::Zero();
 		}
 	}
 
@@ -199,21 +216,27 @@ void ARoleBaseActor::Move()
 	{
 		TargetLocation = TargetActor->GetTransform().GetLocation();
 
-		auto NewPos = FVector{ TargetLocation.X, TargetLocation.Y, TargetLocation.Z + 9999. };
+		const auto NewPos = FVector{ TargetLocation.X, TargetLocation.Y, TargetLocation.Z + 9999. };
 		FHitResult HitRes{};
-		
-		auto isHit = GetWorld()->LineTraceSingleByChannel(HitRes, NewPos, TargetLocation, ECC_GameTraceChannel1);
-		if (isHit)
+
+		//	先判断要移动到的grid的高度
+		if (GetWorld()->LineTraceSingleByChannel(HitRes, NewPos, TargetLocation, ECC_GameTraceChannel1))
 		{
-			HitRes.Location;
+			TargetLocation = HitRes.Location;
 		}
-		//ECC_WorldStatic
-		auto CurrentLocation = this->GetTransform().GetLocation();
+		const auto CurrentLocation = this->GetTransform().GetLocation();
+		if (abs(TargetLocation.Z - CurrentLocation.Z) <= CrossGridMaxGeight)
+		{
+			MoveDirection = TargetLocation - CurrentLocation;
+			MoveDirection.Normalize(0.0001);
 
-		MoveDirection = TargetLocation - CurrentLocation;
-		MoveDirection.Normalize(0.0001);
-
-		isMoving = true;
+			isMoving = true;
+		}
+		else
+		{
+			isMoving = false;
+			MoveDirection = FVector::Zero();
+		}
 	}
 	inputType = None;
 }

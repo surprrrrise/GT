@@ -142,6 +142,17 @@ void AGridManagerActor::BeginPlay()
 	UGameplayStatics::GetAllActorsWithTag(World, TEXT("Grid"), GridActorArray);
 	//	¹¹½¨Grid
 	BuildLevel(GridActorArray);
+
+	GridList.Empty();
+	GridMappingMap.Empty();
+}
+
+void AGridManagerActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GridList.Empty();
+	GridMappingMap.Empty();
 }
 
 // Called every frame

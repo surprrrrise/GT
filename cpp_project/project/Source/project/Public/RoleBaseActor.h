@@ -76,7 +76,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
 	float SanValue;
 
-private:
+public:
 	//	 ‰»Î¿‡–Õ
 	ERoleInput inputType = None;
 
@@ -89,11 +89,13 @@ private:
 	FVector TargetLocation;
 	FVector MoveDirection;
 
+	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	AGridBaseActor* CurrentGrid;
 
 	float SanDeltaValue;
 
 	float CrossGridMaxGeight;
 
+	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	TArray<AGridBaseActor*> SceneGridList;
 };
