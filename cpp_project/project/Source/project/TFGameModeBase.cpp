@@ -7,6 +7,6 @@
 
 ATFGameModeBase::ATFGameModeBase() : AGameModeBase()
 {
-	//	ÉèÖÃPlayer Controller
+	//	è®¾ç½®Player Controller
 	PlayerControllerClass = ATFPlayerController::StaticClass();
 }

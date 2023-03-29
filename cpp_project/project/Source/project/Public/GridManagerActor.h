@@ -11,7 +11,7 @@
 
 
 /*
-	Ã¿¸ögridµÄĞÅÏ¢
+	æ¯ä¸ªgridçš„ä¿¡æ¯
 */
 USTRUCT()
 struct FGridAdjacentInfo
@@ -28,7 +28,7 @@ public:
 	AGridBaseActor* Up_Left = nullptr;
 };
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class PROJECT_API AGridManagerActor : public AActor
 {
 	GENERATED_BODY()
@@ -71,10 +71,10 @@ public:
 	void SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>&);
 
 public:
-	//	gridµÄÁĞ±í
+	//	gridçš„åˆ—è¡¨
 	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	TArray<AGridBaseActor*> GridList;
-	//	gridµÄÓ³Éämap
+	//	gridçš„æ˜ å°„map
 	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	TMap<AGridBaseActor*, FGridAdjacentInfo> GridMappingMap;
 

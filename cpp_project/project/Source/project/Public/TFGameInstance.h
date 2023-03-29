@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+
+#include "GridManagerActor.h"
+
 #include "TFGameInstance.generated.h"
 
 /**
@@ -16,4 +19,12 @@ class PROJECT_API UTFGameInstance : public UGameInstance
 
 public:
 	UTFGameInstance();
+
+	virtual void StartGameInstance() override;
+
+	virtual FGameInstancePIEResult StartPlayInEditorGameInstance(ULocalPlayer* LocalPlayer, const FGameInstancePIEParameters& Params) override;
+
+public:
+	UPROPERTY(VisibleAnywhere, Category = "TF")
+	TObjectPtr<AGridManagerActor> GridManager;
 };

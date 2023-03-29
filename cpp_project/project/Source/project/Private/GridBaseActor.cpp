@@ -17,7 +17,7 @@ AGridBaseActor::AGridBaseActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//	创建Mesh
+	//	鍒涘缓Mesh
 	GridMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Grid_Mesh"));
 	GridMesh->SetupAttachment(RootComponent);
 	FogMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fog_Mesh"));
@@ -30,7 +30,7 @@ void AGridBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//	获取全局设定
+	//	鑾峰彇鍏ㄥ眬璁惧畾
 	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATFGlobalConfigActor::StaticClass());
 	ATFGlobalConfigActor* GLobalSetting = Cast<ATFGlobalConfigActor>(Actor);
 	FogDisableTime = GLobalSetting->FogDisableTime;

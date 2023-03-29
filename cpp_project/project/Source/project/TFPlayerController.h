@@ -14,6 +14,6 @@ class PROJECT_API ATFPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
-	//	¹¹Ôìº¯Êý
+	//	æž„é€ å‡½æ•°
 	ATFPlayerController();
 };

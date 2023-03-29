@@ -53,11 +53,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	//	ÃÔÎíµÄgetter/setter
+	//	è¿·é›¾çš„getter/setter
 	void SetFogStatus(bool flag);
 	bool GetFogStatus()const { return isFogEnable; }
 
-	//	¸ß¶ÈµÄgetter/setter
+	//	é«˜åº¦çš„getter/setter
 	void SetHeight(const float& val) { HeightInfo = val; }
 	float GetHeight() const { return HeightInfo; }
 
@@ -67,25 +67,28 @@ public:
 	void Deform();
 
 public:
-	//	µØÃæµÄmesh
+	void SetAttacking();
+
+public:
+	//	åœ°é¢çš„mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		TObjectPtr<UStaticMeshComponent> GridMesh;
 
-	//	ÃÔÎíµÄmesh
+	//	è¿·é›¾çš„mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		TObjectPtr<UStaticMeshComponent> FogMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 	FTransform FogRelativeTransform;
 
-	//	Íø¸ñµÄ±àºÅ
+	//	ç½‘æ ¼çš„ç¼–å·
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		int32 GridNum;
 
-	//	gridµÄ½»»¥ĞÅÏ¢
+	//	gridçš„äº¤äº’ä¿¡æ¯
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		FGridInteractionInfo GridInteractionInfo;
-	//	gridµÄ¹¥»÷ĞÅÏ¢
+	//	gridçš„æ”»å‡»ä¿¡æ¯
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		FGridAttackingInfo GridAttackingInfo;
 

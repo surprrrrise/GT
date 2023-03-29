@@ -48,7 +48,7 @@ public:
 	void OpenFog();
 
 public:
-	//	ÊäÈë´¦Àí
+	//	è¾“å…¥å¤„ç†
 	void UpPress();
 	void DownPress();
 	void RightPress();
@@ -57,33 +57,33 @@ public:
 	void Move();
 
 public:
-	//	»ñÈ¡µ½ÈËÎïµ±Ç°ËùÔÚµÄÍø¸ñ
+	//	è·å–åˆ°äººç‰©å½“å‰æ‰€åœ¨çš„ç½‘æ ¼
 	AGridBaseActor* GetCurrentGrid(TArray<AGridBaseActor*>& GridList);
 
-	//	»ñÈ¡µ½³¡¾°ÖĞµÄGrid
+	//	è·å–åˆ°åœºæ™¯ä¸­çš„Grid
 	TArray<AGridBaseActor*> GetGridList();
 
 public:
-	//	ÈËÎïµÄmesh
+	//	äººç‰©çš„mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
-	//	ÈËÎïÒÆ¶¯µÄËÙ¶È
+	//	äººç‰©ç§»åŠ¨çš„é€Ÿåº¦
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
 	float Velocity;
 
-	//	ÈËÎïµÄsanÖµ
+	//	äººç‰©çš„sanå€¼
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
 	float SanValue;
 
 public:
-	//	ÊäÈëÀàĞÍ
+	//	è¾“å…¥ç±»å‹
 	ERoleInput inputType = None;
 
-	//	ÊÇ·ñÔÚÒÆ¶¯
+	//	æ˜¯å¦åœ¨ç§»åŠ¨
 	bool isMoving = false;
 
-	//	ÈËÎïµ±Ç°µÄSanÖµ
+	//	äººç‰©å½“å‰çš„Sanå€¼
 	float CurrentSanValue;
 
 	FVector TargetLocation;

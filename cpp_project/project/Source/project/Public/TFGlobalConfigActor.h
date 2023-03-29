@@ -24,15 +24,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	//	Ã¿Ö¡ÈËÎïSanÖµµôÂäÖµ
+	//	æ¯å¸§äººç‰©Sanå€¼æ‰è½å€¼
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Global")
 		float RoleSanDeltaValue;
 
-	//	ÈËÎï×î´ó¿É¿çÔ½¸ß¶È
+	//	äººç‰©æœ€å¤§å¯è·¨è¶Šé«˜åº¦
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Global")
 		float RoleCrossGridMaxGeight;
 
-	//	ÎíÆøÏûÉ¢µÄ³ÖĞøÊ±¼ä
+	//	é›¾æ°”æ¶ˆæ•£çš„æŒç»­æ—¶é—´
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Global")
 		float FogDisableTime;
 };

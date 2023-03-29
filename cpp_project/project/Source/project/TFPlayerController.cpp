@@ -5,7 +5,7 @@
 
 ATFPlayerController::ATFPlayerController() : APlayerController()
 {
-	//	ÉèÖÃÓÎÏ·ÊôĞÔ
+	//	è®¾ç½®æ¸¸æˆå±æ€§
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 }

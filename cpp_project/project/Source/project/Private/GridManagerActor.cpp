@@ -121,7 +121,6 @@ const int32 GridAdjacentInfoList[100][6] =
 
 };
 
-AGridManagerActor* AGridManagerActor::GridManagerActor = nullptr;
 
 // Sets default values
 AGridManagerActor::AGridManagerActor(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -136,11 +135,11 @@ void AGridManagerActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//	ÏÈ»ñÈ¡µ½³¡¾°ÖĞËùÓĞµÄgrid base
+	//	å…ˆè·å–åˆ°åœºæ™¯ä¸­æ‰€æœ‰çš„grid base
 	TArray<AActor*> GridActorArray;
 	auto World = GetWorld();
 	UGameplayStatics::GetAllActorsWithTag(World, TEXT("Grid"), GridActorArray);
-	//	¹¹½¨Grid
+	//	æ„å»ºGrid
 	BuildLevel(GridActorArray);
 
 	GridList.Empty();
@@ -164,33 +163,33 @@ void AGridManagerActor::Tick(float DeltaTime)
 void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 {
 	TMap<int32, AGridBaseActor*> TempMappingMap;
-	//	±éÀúËùÓĞactor
-	//		ÕâÒ»±éÖ÷ÒªÊÇÅĞ¶ÏÄÄĞ©grid´æÔÚ
+	//	éå†æ‰€æœ‰actor
+	//		è¿™ä¸€éä¸»è¦æ˜¯åˆ¤æ–­å“ªäº›gridå­˜åœ¨
 	for (AActor* Actor : GridActorArray)
 	{
-		//	ÏÈ½øĞĞÀàĞÍ×ª»»
+		//	å…ˆè¿›è¡Œç±»å‹è½¬æ¢
 		AGridBaseActor* Grid = Cast<AGridBaseActor>(Actor);
 
-		//	Ìí¼ÓĞòºÅ
+		//	æ·»åŠ åºå·
 		TempMappingMap.Add(TTuple<int32, AGridBaseActor*>(Grid->GridNum, Grid));
 
 		GridList.Add(Grid);
 	}
 
-	//	ÔÙ±éÀúÒ»±é
+	//	å†éå†ä¸€é
 	for (AActor* Actor : GridActorArray)
 	{
-		//	ÏÈ½øĞĞÀàĞÍ×ª»»
+		//	å…ˆè¿›è¡Œç±»å‹è½¬æ¢
 		AGridBaseActor* Grid = Cast<AGridBaseActor>(Actor);
 
 		auto AdjacentInfo = GridAdjacentInfoList[Grid->GridNum - 1];
 
 		FGridAdjacentInfo TempNode{};
 
-		//	ÖğÒ»ÅĞ¶Ï
+		//	é€ä¸€åˆ¤æ–­
 		if (AdjacentInfo[0] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[0]))
 			{
 				TempNode.Up = TempMappingMap[AdjacentInfo[0]];
@@ -198,7 +197,7 @@ void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[1] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[1]))
 			{
 				TempNode.Up_Right = TempMappingMap[AdjacentInfo[1]];
@@ -206,7 +205,7 @@ void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[2] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[1]))
 			{
 				TempNode.Down_Right = TempMappingMap[AdjacentInfo[1]];
@@ -214,7 +213,7 @@ void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[3] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[1]))
 			{
 				TempNode.Down = TempMappingMap[AdjacentInfo[1]];
@@ -222,7 +221,7 @@ void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[4] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[1]))
 			{
 				TempNode.Down_Left = TempMappingMap[AdjacentInfo[1]];
@@ -230,7 +229,7 @@ void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[5] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[1]))
 			{
 				TempNode.Up_Left = TempMappingMap[AdjacentInfo[1]];
@@ -245,27 +244,27 @@ void AGridManagerActor::BuildLevel(TArray<AActor*>& GridActorArray)
 void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 {
 	TMap<int32, AGridBaseActor*> TempMappingMap;
-	//	±éÀúËùÓĞactor
-	//		ÕâÒ»±éÖ÷ÒªÊÇÅĞ¶ÏÄÄĞ©grid´æÔÚ
+	//	éå†æ‰€æœ‰actor
+	//		è¿™ä¸€éä¸»è¦æ˜¯åˆ¤æ–­å“ªäº›gridå­˜åœ¨
 	for (AGridBaseActor* Grid : GridActorArray)
 	{
-		//	Ìí¼ÓĞòºÅ
+		//	æ·»åŠ åºå·
 		TempMappingMap.Add(TTuple<int32, AGridBaseActor*>(Grid->GridNum, Grid));
 
 		GridList.Add(Grid);
 	}
 
-	//	ÔÙ±éÀúÒ»±é
+	//	å†éå†ä¸€é
 	for (AGridBaseActor* Grid : GridActorArray)
 	{
 		auto AdjacentInfo = GridAdjacentInfoList[Grid->GridNum - 1];
 
 		FGridAdjacentInfo TempNode{};
 
-		//	ÖğÒ»ÅĞ¶Ï
+		//	é€ä¸€åˆ¤æ–­
 		if (AdjacentInfo[0] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[0]))
 			{
 				TempNode.Up = TempMappingMap[AdjacentInfo[0]];
@@ -273,7 +272,7 @@ void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[1] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[1]))
 			{
 				TempNode.Up_Right = TempMappingMap[AdjacentInfo[1]];
@@ -281,7 +280,7 @@ void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[2] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[2]))
 			{
 				TempNode.Down_Right = TempMappingMap[AdjacentInfo[2]];
@@ -289,7 +288,7 @@ void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[3] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[3]))
 			{
 				TempNode.Down = TempMappingMap[AdjacentInfo[3]];
@@ -297,7 +296,7 @@ void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[4] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[4]))
 			{
 				TempNode.Down_Left = TempMappingMap[AdjacentInfo[4]];
@@ -305,7 +304,7 @@ void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 		}
 		if (AdjacentInfo[5] != 0)
 		{
-			//	´æÔÚ
+			//	å­˜åœ¨
 			if (TempMappingMap.Contains(AdjacentInfo[5]))
 			{
 				TempNode.Up_Left = TempMappingMap[AdjacentInfo[5]];
@@ -327,6 +326,12 @@ void AGridManagerActor::SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseAc
 	}
 
 	GridInteractionFunc();
+
+	//	å‘Šè¯‰ä¸´è¿‘ç½‘æ ¼æ”»å‡»è§’è‰²
+	if (CurrentGrid->GridAttackingInfo.isEnable)
+	{
+
+	}
 }
 
 AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 index, TArray<AGridBaseActor*>& GridActorArray)

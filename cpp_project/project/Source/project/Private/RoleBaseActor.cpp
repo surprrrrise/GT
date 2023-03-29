@@ -17,7 +17,7 @@ ARoleBaseActor::ARoleBaseActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;	
 	
-	//	´´½¨Mesh
+	//	åˆ›å»ºMesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Role"));
 	Mesh->SetupAttachment(RootComponent);
 }
@@ -27,13 +27,13 @@ void ARoleBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//	»ñÈ¡È«¾ÖÉè¶¨
+	//	è·å–å…¨å±€è®¾å®š
 	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATFGlobalConfigActor::StaticClass());
 	ATFGlobalConfigActor* GLobalSetting = Cast<ATFGlobalConfigActor>(Actor);
 	SanDeltaValue = GLobalSetting->RoleSanDeltaValue;
 	CrossGridMaxGeight = GLobalSetting->RoleCrossGridMaxGeight;
 
-	//	ÆôÓÃÓÃ»§ÊäÈë
+	//	å¯ç”¨ç”¨æˆ·è¾“å…¥
 	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
 	if (PC)
 	{
@@ -69,20 +69,20 @@ void ARoleBaseActor::Tick(float DeltaTime)
 		Transform.SetLocation(Location);
 		this->SetActorTransform(Transform);
 
-		//	ÅĞ¶ÏÊÇ·ñÍ£Ö¹
+		//	åˆ¤æ–­æ˜¯å¦åœæ­¢
 		if (UKismetMathLibrary::Dot_VectorVector((TargetLocation - Location), MoveDirection) < 0.)
 		{
 			isMoving = false;
 			CurrentGrid = GetCurrentGrid(SceneGridList);
 			AGridManagerActor::GetInstance()->SetCurrentGrid(CurrentGrid, SceneGridList);
 
-			//	ÉèÖÃÎ»ÖÃ
+			//	è®¾ç½®ä½ç½®
 			TargetLocation = CurrentGrid->GetTransform().GetLocation();
 
 			auto NewPos = FVector{ TargetLocation.X, TargetLocation.Y, TargetLocation.Z + 9999. };
 			FHitResult HitRes{};
 
-			//	ÒÆ¶¯µ½µ±Ç°µÄgridºógridÓĞ¿ÉÄÜ»á±äĞÎ£¬ÕâÊ±ÎÒÃÇĞèÒªÅĞ¶ÏÒ»ÏÂ²¢½«½ÇÉ«½øĞĞÒÆ¶¯
+			//	ç§»åŠ¨åˆ°å½“å‰çš„gridågridæœ‰å¯èƒ½ä¼šå˜å½¢ï¼Œè¿™æ—¶æˆ‘ä»¬éœ€è¦åˆ¤æ–­ä¸€ä¸‹å¹¶å°†è§’è‰²è¿›è¡Œç§»åŠ¨
 			if (GetWorld()->LineTraceSingleByChannel(HitRes, NewPos, TargetLocation, ECC_GameTraceChannel1))
 			{
 				TargetLocation = HitRes.Location;
@@ -95,13 +95,13 @@ void ARoleBaseActor::Tick(float DeltaTime)
 		}
 	}
 
-	//	ÅĞ¶ÏÊÇ·ñµôsanÖµ
+	//	åˆ¤æ–­æ˜¯å¦æ‰sanå€¼
 	if (CurrentGrid->GetFogStatus())
 	{
 		CurrentSanValue -= SanDeltaValue;
 	}
 
-	//	sanÖµ¹ıµÍ£¬ËÀÍö
+	//	sanå€¼è¿‡ä½ï¼Œæ­»äº¡
 	if (CurrentSanValue < 0.)
 	{
 		Dead();
@@ -219,7 +219,7 @@ void ARoleBaseActor::Move()
 		const auto NewPos = FVector{ TargetLocation.X, TargetLocation.Y, TargetLocation.Z + 9999. };
 		FHitResult HitRes{};
 
-		//	ÏÈÅĞ¶ÏÒªÒÆ¶¯µ½µÄgridµÄ¸ß¶È
+		//	å…ˆåˆ¤æ–­è¦ç§»åŠ¨åˆ°çš„gridçš„é«˜åº¦
 		if (GetWorld()->LineTraceSingleByChannel(HitRes, NewPos, TargetLocation, ECC_GameTraceChannel1))
 		{
 			TargetLocation = HitRes.Location;
@@ -270,16 +270,16 @@ AGridBaseActor* ARoleBaseActor::GetCurrentGrid(TArray<AGridBaseActor*>& GridList
 TArray<AGridBaseActor*> ARoleBaseActor::GetGridList()
 {
 	TArray<AGridBaseActor*> res;
-	//	ÏÈ»ñÈ¡µ½³¡¾°ÖĞËùÓĞµÄgrid base
+	//	å…ˆè·å–åˆ°åœºæ™¯ä¸­æ‰€æœ‰çš„grid base
 	TArray<AActor*> GridActorArray;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("Grid"), GridActorArray);
 
 	TMap<int32, AGridBaseActor*> TempMappingMap;
-	//	±éÀúËùÓĞactor
-	//		ÕâÒ»±éÖ÷ÒªÊÇÅĞ¶ÏÄÄĞ©grid´æÔÚ
+	//	éå†æ‰€æœ‰actor
+	//		è¿™ä¸€éä¸»è¦æ˜¯åˆ¤æ–­å“ªäº›gridå­˜åœ¨
 	for (AActor* Actor : GridActorArray)
 	{
-		//	ÏÈ½øĞĞÀàĞÍ×ª»»
+		//	å…ˆè¿›è¡Œç±»å‹è½¬æ¢
 		AGridBaseActor* Grid = Cast<AGridBaseActor>(Actor);
 
 		

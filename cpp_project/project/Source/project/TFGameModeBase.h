@@ -15,6 +15,6 @@ class PROJECT_API ATFGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	//	¹¹Ôìº¯Êý
+	//	æž„é€ å‡½æ•°
 	ATFGameModeBase();
 };
