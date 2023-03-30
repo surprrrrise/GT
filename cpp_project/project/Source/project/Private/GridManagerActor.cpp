@@ -316,7 +316,7 @@ void AGridManagerActor::BuildLevel(TArray<AGridBaseActor*>& GridActorArray)
 	}
 }
 
-void AGridManagerActor::SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>& GridActorArray)
+void AGridManagerActor::SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>& GridActorArray, TArray<float>& AttackingValue, TArray<int>& AttackingDuration)
 {
 	CurrentGrid = Value;
 
@@ -330,8 +330,23 @@ void AGridManagerActor::SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseAc
 	//	告诉临近网格攻击角色
 	if (CurrentGrid->GridAttackingInfo.isEnable)
 	{
-
+		AttackingValue.Add(CurrentGrid->GridAttackingInfo.Value);
+		AttackingDuration.Add(CurrentGrid->GridAttackingInfo.Duration);
 	}
+
+	for (size_t i = 1; i <= 6; ++i)
+	{
+		auto Relative = GetRelativeGrid(CurrentGrid, i, GridList);
+		if (Relative)
+		{
+			if (Relative->GridAttackingInfo.isEnable)
+			{
+				AttackingValue.Add(Relative->GridAttackingInfo.Value);
+				AttackingDuration.Add(Relative->GridAttackingInfo.Duration);
+			}
+		}
+	}
+	
 }
 
 AGridBaseActor* AGridManagerActor::GetRelativeGrid(AGridBaseActor* grid, int32 index, TArray<AGridBaseActor*>& GridActorArray)

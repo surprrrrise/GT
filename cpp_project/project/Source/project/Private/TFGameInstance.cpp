@@ -2,7 +2,7 @@
 
 
 #include "TFGameInstance.h"
-
+PRAGMA_DISABLE_OPTIMIZATION
 
 AGridManagerActor* AGridManagerActor::GridManagerActor = nullptr;
 
@@ -14,7 +14,7 @@ void UTFGameInstance::StartGameInstance()
 {
 	Super::StartGameInstance();
 
-	GridManager = AGridManagerActor::GetInstance();
+	GridManager = AGridManagerActor::Flush();
 
 }
 
@@ -22,6 +22,8 @@ FGameInstancePIEResult UTFGameInstance::StartPlayInEditorGameInstance(ULocalPlay
 {
 	FGameInstancePIEResult StartResult = Super::StartPlayInEditorGameInstance(LocalPlayer, Params);
 	UE_LOG(LogTemp, Warning, TEXT("StartPlayInEditorGameInstance :Create Singleton"));
-	GridManager = AGridManagerActor::GetInstance();
+	GridManager = AGridManagerActor::Flush();
 	return StartResult;
 }
+
+PRAGMA_ENABLE_OPTIMIZATION

@@ -46,6 +46,12 @@ public:
 		return GridManagerActor;
 	}
 
+	static AGridManagerActor* Flush()
+	{
+		GridManagerActor = NewObject<AGridManagerActor>(GWorld->GetWorld());;
+		return GridManagerActor;
+	}
+
 private:
 	static AGridManagerActor* GridManagerActor;
 
@@ -68,7 +74,7 @@ public:
 	void GridInteractionFunc();
 
 public:
-	void SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>&);
+	void SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>&, TArray<float>&, TArray<int>&);
 
 public:
 	//	grid的列表

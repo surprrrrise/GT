@@ -32,6 +32,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 	float Value;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+	int Duration;
 };
 
 

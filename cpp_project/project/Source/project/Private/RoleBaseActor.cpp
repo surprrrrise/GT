@@ -74,8 +74,13 @@ void ARoleBaseActor::Tick(float DeltaTime)
 		{
 			isMoving = false;
 			CurrentGrid = GetCurrentGrid(SceneGridList);
-			AGridManagerActor::GetInstance()->SetCurrentGrid(CurrentGrid, SceneGridList);
 
+			TArray<float> AttackingValue;
+			TArray<int> AttackingDuration;
+			AGridManagerActor::GetInstance()->SetCurrentGrid(CurrentGrid, SceneGridList,AttackingValue, AttackingDuration);
+
+			AttackingInfo.AttackingValue.Append(AttackingValue);
+			AttackingInfo.AttackingDuration.Append(AttackingDuration);
 			//	设置位置
 			TargetLocation = CurrentGrid->GetTransform().GetLocation();
 
@@ -99,6 +104,19 @@ void ARoleBaseActor::Tick(float DeltaTime)
 	if (CurrentGrid->GetFogStatus())
 	{
 		CurrentSanValue -= SanDeltaValue;
+	}
+
+	//	判断攻击
+	for (size_t i = 0; i < AttackingInfo.AttackingDuration.Num(); ++i)
+	{
+		CurrentSanValue -= AttackingInfo.AttackingValue[i];
+		AttackingInfo.AttackingDuration[i] -= 1;
+		if (AttackingInfo.AttackingDuration[i] <= 0)
+		{
+			AttackingInfo.AttackingDuration.RemoveAt(i);
+			AttackingInfo.AttackingValue.RemoveAt(i);
+			--i;
+		}
 	}
 
 	//	san值过低，死亡

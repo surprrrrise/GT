@@ -30,6 +30,12 @@ public:
 		None
 	};
 
+	struct FAttackingInfo
+	{
+		TArray<float> AttackingValue{};
+		TArray<int> AttackingDuration{};
+	};
+
 public:	
 	// Sets default values for this actor's properties
 	ARoleBaseActor();
@@ -98,4 +104,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	TArray<AGridBaseActor*> SceneGridList;
+
+private:
+	FAttackingInfo AttackingInfo;
 };
