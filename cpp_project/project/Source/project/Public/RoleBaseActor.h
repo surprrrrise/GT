@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 
 #include "GridBaseActor.h"
+#include "GridSelectedActor.h"
 
 #include "RoleBaseActor.generated.h"
 
@@ -52,6 +53,8 @@ public:
 	void Dead();
 
 	void OpenFog();
+
+	void Attack();
 
 public:
 	//	输入处理
@@ -107,4 +110,6 @@ public:
 
 private:
 	FAttackingInfo AttackingInfo;
+
+	AGridSelectedActor* GridSelectedActor;
 };

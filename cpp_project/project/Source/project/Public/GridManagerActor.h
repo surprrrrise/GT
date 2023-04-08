@@ -76,6 +76,14 @@ public:
 public:
 	void SetCurrentGrid(AGridBaseActor* Value, TArray<AGridBaseActor*>&, TArray<float>&, TArray<int>&);
 
+	//void SetHintGrid(AGridBaseActor* Target, TArray< AGridBaseActor*> SceneGridList);
+
+	//void EnableRoleAttacking();
+
+	//void SelectGrid();
+
+	//void ClearSelected();
+
 public:
 	//	grid的列表
 	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
@@ -86,4 +94,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "TF|Role")
 	AGridBaseActor* CurrentGrid;
+//private:
+//	bool isEnableRoleAttacking = false;
+//
+//	TArray<AGridBaseActor*> EnableAttackGridList;
+//
+//	AGridBaseActor* SelectedGrid;
 };

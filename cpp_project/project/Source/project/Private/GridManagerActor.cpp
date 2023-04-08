@@ -125,9 +125,9 @@ const int32 GridAdjacentInfoList[100][6] =
 // Sets default values
 AGridManagerActor::AGridManagerActor(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
 // Called when the game starts or when spawned

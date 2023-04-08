@@ -70,7 +70,12 @@ public:
 	void Deform();
 
 public:
-	void SetAttacking();
+	void SetCanAttacking();
+
+	void SetSelected();
+	void SetUnSelected();
+
+	void ResetSelected();
 
 public:
 	//	地面的mesh
@@ -80,6 +85,18 @@ public:
 	//	迷雾的mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 		TObjectPtr<UStaticMeshComponent> FogMesh;
+
+	//	提示的mesh
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+		TObjectPtr<UStaticMeshComponent> HintMesh;
+
+	//	提示的正常材质
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+		UMaterialInstance* HintNormalMaterial;
+
+	//	提示的选中材质
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
+		UMaterialInstance* HintSelectedMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Grid|Tower")
 	FTransform FogRelativeTransform;
@@ -105,4 +122,6 @@ private:
 	float FogDisableTime;
 
 	float CurFogDisableTime;
+
+
 };

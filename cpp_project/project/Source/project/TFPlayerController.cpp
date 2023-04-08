@@ -8,4 +8,5 @@ ATFPlayerController::ATFPlayerController() : APlayerController()
 	//	设置游戏属性
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
+
 }

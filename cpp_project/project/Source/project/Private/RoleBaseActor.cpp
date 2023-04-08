@@ -33,6 +33,8 @@ void ARoleBaseActor::BeginPlay()
 	SanDeltaValue = GLobalSetting->RoleSanDeltaValue;
 	CrossGridMaxGeight = GLobalSetting->RoleCrossGridMaxGeight;
 
+	Actor = UGameplayStatics::GetActorOfClass(GetWorld(), AGridSelectedActor::StaticClass());
+	GridSelectedActor = Cast<AGridSelectedActor>(Actor);
 	//	启用用户输入
 	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
 	if (PC)
@@ -45,6 +47,7 @@ void ARoleBaseActor::BeginPlay()
 		InputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, &ARoleBaseActor::LeftPress);
 
 		InputComponent->BindAction("OpenFog", EInputEvent::IE_Pressed, this, &ARoleBaseActor::OpenFog);
+		InputComponent->BindAction("Attacking", EInputEvent::IE_Pressed, this, &ARoleBaseActor::Attack);
 	}
 
 	SceneGridList = GetGridList();
@@ -145,6 +148,19 @@ void ARoleBaseActor::OpenFog()
 	}
 }
 
+void ARoleBaseActor::Attack()
+{
+	if (isMoving) return;
+	if (!GridSelectedActor)
+	{
+		auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), AGridSelectedActor::StaticClass());
+		GridSelectedActor = Cast<AGridSelectedActor>(Actor);
+	}
+	GridSelectedActor->ClearSelected();
+	GridSelectedActor->SetHintGrid(CurrentGrid, SceneGridList);
+	GridSelectedActor->EnableRoleAttacking();
+}
+
 void ARoleBaseActor::UpPress()
 {
 	if (!isMoving)
@@ -203,6 +219,8 @@ void ARoleBaseActor::LeftPress()
 
 void ARoleBaseActor::Move()
 {
+	GridSelectedActor->ClearSelected();
+
 	AGridBaseActor* TargetActor = nullptr;
 	switch (inputType)
 	{
