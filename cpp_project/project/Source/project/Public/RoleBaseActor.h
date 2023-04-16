@@ -11,7 +11,7 @@
 #include "RoleBaseActor.generated.h"
 
 UCLASS()
-class PROJECT_API ARoleBaseActor : public AActor
+class PROJECT_API ARoleBaseActor : public APawn
 {
 	GENERATED_BODY()
 	
@@ -41,6 +41,8 @@ public:
 	// Sets default values for this actor's properties
 	ARoleBaseActor();
 
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,9 +54,13 @@ public:
 public:
 	void Dead();
 
+	void Win();
+
 	void OpenFog();
 
 	void Attack();
+
+	void AttackedByEnemy(float Value);
 
 public:
 	//	输入处理
@@ -72,6 +78,9 @@ public:
 	//	获取到场景中的Grid
 	TArray<AGridBaseActor*> GetGridList();
 
+	//	获取到终点grid
+	TArray<AGridBaseActor*> GetTerminalGrid(TArray<AActor*>&);
+
 public:
 	//	人物的mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
@@ -86,13 +95,23 @@ public:
 	float SanValue;
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role|UI")
+	TSubclassOf<UUserWidget> WinWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role|UI")
+	TSubclassOf<UUserWidget> LoseWidget;
+
+public:
 	//	输入类型
 	ERoleInput inputType = None;
 
 	//	是否在移动
 	bool isMoving = false;
 
+	bool isDead = false;
+
 	//	人物当前的San值
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TF|Role")
 	float CurrentSanValue;
 
 	FVector TargetLocation;
@@ -112,4 +131,6 @@ private:
 	FAttackingInfo AttackingInfo;
 
 	AGridSelectedActor* GridSelectedActor;
+
+	TArray<AGridBaseActor*> TerminalGrid;
 };

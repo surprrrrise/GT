@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "TFPlayerController.generated.h"
 
+
+
 /**
  * 
  */
@@ -16,4 +18,9 @@ class PROJECT_API ATFPlayerController : public APlayerController
 public:
 	//	构造函数
 	ATFPlayerController();
+
+
+	virtual void SetupInputComponent() override;
+
+	void UpPress();
 };

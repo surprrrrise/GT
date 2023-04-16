@@ -17,4 +17,5 @@ class PROJECT_API ATFGameModeBase : public AGameModeBase
 public:
 	//	构造函数
 	ATFGameModeBase();
+
 };

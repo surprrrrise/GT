@@ -5,6 +5,7 @@
 
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Blueprint/UserWidget.h>
 
 #include "GridManagerActor.h"
 #include "TFGlobalConfigActor.h"
@@ -22,37 +23,52 @@ ARoleBaseActor::ARoleBaseActor()
 	Mesh->SetupAttachment(RootComponent);
 }
 
+void ARoleBaseActor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	InputComponent->BindAction("Up", EInputEvent::IE_Pressed, this, &ARoleBaseActor::UpPress);
+	InputComponent->BindAction("Down", EInputEvent::IE_Pressed, this, &ARoleBaseActor::DownPress);
+	InputComponent->BindAction("Right", EInputEvent::IE_Pressed, this, &ARoleBaseActor::RightPress);
+	InputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, &ARoleBaseActor::LeftPress);
+
+	InputComponent->BindAction("OpenFog", EInputEvent::IE_Pressed, this, &ARoleBaseActor::OpenFog);
+	InputComponent->BindAction("Attacking", EInputEvent::IE_Pressed, this, &ARoleBaseActor::Attack);
+}
+
 // Called when the game starts or when spawned
 void ARoleBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//	先刷新一下manager
+	AGridManagerActor::GetInstance()->Flush();
 	
 	//	获取全局设定
 	auto Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATFGlobalConfigActor::StaticClass());
 	ATFGlobalConfigActor* GLobalSetting = Cast<ATFGlobalConfigActor>(Actor);
 	SanDeltaValue = GLobalSetting->RoleSanDeltaValue;
 	CrossGridMaxGeight = GLobalSetting->RoleCrossGridMaxGeight;
+	Velocity = GLobalSetting->RoleVelocity;
+	SanValue = GLobalSetting->RoleSanValue;
+	WinWidget = GLobalSetting->RoleWinWidget;
+	LoseWidget = GLobalSetting->RoleLoseWidget;
 
 	Actor = UGameplayStatics::GetActorOfClass(GetWorld(), AGridSelectedActor::StaticClass());
 	GridSelectedActor = Cast<AGridSelectedActor>(Actor);
-	//	启用用户输入
-	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-	if (PC)
-	{
-		EnableInput(PC);
-
-		InputComponent->BindAction("Up", EInputEvent::IE_Pressed, this, &ARoleBaseActor::UpPress);
-		InputComponent->BindAction("Down", EInputEvent::IE_Pressed, this, &ARoleBaseActor::DownPress);
-		InputComponent->BindAction("Right", EInputEvent::IE_Pressed, this, &ARoleBaseActor::RightPress);
-		InputComponent->BindAction("Left", EInputEvent::IE_Pressed, this, &ARoleBaseActor::LeftPress);
-
-		InputComponent->BindAction("OpenFog", EInputEvent::IE_Pressed, this, &ARoleBaseActor::OpenFog);
-		InputComponent->BindAction("Attacking", EInputEvent::IE_Pressed, this, &ARoleBaseActor::Attack);
-	}
+	
+	//	获取到终点
+	TArray<AActor*> TargetActor;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName(TEXT("Terminal")), TargetActor);
 
 	SceneGridList = GetGridList();
 	CurrentGrid = GetCurrentGrid(SceneGridList);
 
+	if (!TargetActor.IsEmpty())
+	{
+		TerminalGrid = GetTerminalGrid(TargetActor);
+	}
+	
 	
 	auto SelfLocation = this->GetTransform().GetLocation();
 	auto GridLocation = CurrentGrid->GetActorLocation();
@@ -100,6 +116,14 @@ void ARoleBaseActor::Tick(float DeltaTime)
 			SetActorLocation(TargetLocation);
 
 			MoveDirection = FVector::Zero();
+
+			for (auto& Terminal : TerminalGrid)
+			{
+				if (CurrentGrid == Terminal)
+				{
+					Win();
+				}
+			}
 		}
 	}
 
@@ -123,14 +147,37 @@ void ARoleBaseActor::Tick(float DeltaTime)
 	}
 
 	//	san值过低，死亡
-	if (CurrentSanValue < 0.)
+	if (!isDead && CurrentSanValue < 0.)
 	{
 		Dead();
+		isDead = true;
 	}
 }
 
 void ARoleBaseActor::Dead()
 {
+	if (LoseWidget)
+	{
+		UUserWidget* TempLoseWidget = CreateWidget<UUserWidget>(GetWorld(), LoseWidget);
+		if (TempLoseWidget)
+		{
+			TempLoseWidget->AddToViewport();
+			UGameplayStatics::GetPlayerController(this, 0)->bShowMouseCursor = true;
+		}
+	}
+}
+
+void ARoleBaseActor::Win()
+{
+	if (WinWidget)
+	{
+		UUserWidget* TempWinWidget = CreateWidget<UUserWidget>(GetWorld(), WinWidget);
+		if (TempWinWidget)
+		{
+			TempWinWidget->AddToViewport();
+			UGameplayStatics::GetPlayerController(this, 0)->bShowMouseCursor = true;
+		}
+	}
 }
 
 void ARoleBaseActor::OpenFog()
@@ -159,6 +206,11 @@ void ARoleBaseActor::Attack()
 	GridSelectedActor->ClearSelected();
 	GridSelectedActor->SetHintGrid(CurrentGrid, SceneGridList);
 	GridSelectedActor->EnableRoleAttacking();
+}
+
+void ARoleBaseActor::AttackedByEnemy(float Value)
+{
+	CurrentSanValue -= Value;
 }
 
 void ARoleBaseActor::UpPress()
@@ -322,6 +374,35 @@ TArray<AGridBaseActor*> ARoleBaseActor::GetGridList()
 		res.Add(Grid);
 	}
 
+	return res;
+}
+
+TArray<AGridBaseActor*> ARoleBaseActor::GetTerminalGrid(TArray<AActor*>& TargetActor)
+{
+	TArray<AGridBaseActor*> res;
+	for (auto& Actor : TargetActor)
+	{
+		auto CurrentLocation = Actor->GetTransform().GetLocation();
+
+		int32 index = -1;
+		float MinDistance = 9999;
+
+		for (size_t i = 0; i < SceneGridList.Num(); ++i)
+		{
+			auto TempLocation = SceneGridList[i]->GetTransform().GetLocation();
+			auto Distance = (TempLocation - CurrentLocation).Length();
+
+			if (MinDistance > Distance)
+			{
+				MinDistance = Distance;
+				index = i;
+			}
+		}
+
+		if (index == -1) continue;
+
+		res.Add(SceneGridList[index]);
+	}
 	return res;
 }
 

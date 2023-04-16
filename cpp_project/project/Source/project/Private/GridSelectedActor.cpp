@@ -6,6 +6,7 @@
 
 #include "GridBaseActor.h"
 #include "GridManagerActor.h"
+#include "EnemyCharactor.h"
 
 // Sets default values
 AGridSelectedActor::AGridSelectedActor()
@@ -123,6 +124,26 @@ void AGridSelectedActor::SelectGrid()
 	{
 		SelectedGrid->Deform();
 	}
+
+	auto GridLocation = SelectedGrid->GetTransform().GetLocation();
+	TArray<AActor*> TargetActor;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName(TEXT("enemy")), TargetActor);
+	for (auto& Target : TargetActor)
+	{
+
+		auto TargetLocation = Target->GetTransform().GetLocation();
+		auto Length = sqrt(
+			(TargetLocation.X - GridLocation.X) * (TargetLocation.X - GridLocation.X)
+			+
+			(TargetLocation.Y - GridLocation.Y) * (TargetLocation.Y - GridLocation.Y)
+		);
+		if (Length < 140)
+		{
+			auto Enemy = Cast<AEnemyCharactor>(Target);
+			Enemy->HP -= 10;
+		}
+	}
+
 
 	ClearSelected();
 }

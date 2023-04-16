@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "GridBaseActor.h"
 
@@ -42,13 +43,26 @@ public:
 		if (GridManagerActor == nullptr)
 		{
 			GridManagerActor = NewObject<AGridManagerActor>(GWorld->GetWorld());
+
+			//	先获取到场景中所有的grid base
+			TArray<AActor*> GridActorArray;
+			auto World = GridManagerActor->GetWorld();
+			UGameplayStatics::GetAllActorsWithTag(World, TEXT("Grid"), GridActorArray);
+			//	构建Grid
+			GridManagerActor->BuildLevel(GridActorArray);
 		}
 		return GridManagerActor;
 	}
 
 	static AGridManagerActor* Flush()
 	{
-		GridManagerActor = NewObject<AGridManagerActor>(GWorld->GetWorld());;
+		GridManagerActor = NewObject<AGridManagerActor>(GWorld->GetWorld());
+		//	先获取到场景中所有的grid base
+		TArray<AActor*> GridActorArray;
+		auto World = GridManagerActor->GetWorld();
+		UGameplayStatics::GetAllActorsWithTag(World, TEXT("Grid"), GridActorArray);
+		//	构建Grid
+		GridManagerActor->BuildLevel(GridActorArray);
 		return GridManagerActor;
 	}
 
